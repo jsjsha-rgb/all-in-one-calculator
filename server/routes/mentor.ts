@@ -1,7 +1,12 @@
 import crypto from 'node:crypto';
 import { Router } from 'express';
 import { getDb, jsonParse, nowIso } from '../db.ts';
-import { requireAuth, rateLimitMiddleware, type AuthedRequest } from '../lib/auth.ts';
+import {
+  isRateLimitingDisabled,
+  requireAuth,
+  rateLimitMiddleware,
+  type AuthedRequest,
+} from '../lib/auth.ts';
 import {
   AIProviderError,
   MENTOR_SYSTEM_PROMPT,
@@ -19,7 +24,15 @@ export const mentorRouter = Router();
 mentorRouter.get(
   '/ai/status',
   asyncHandler((_req, res) => {
-    res.json(getAIStatus());
+    res.json({
+      ...getAIStatus(),
+      // Every learner gets every feature: no plans, credits or daily caps.
+      access: {
+        free: true,
+        unlimited: true,
+        rateLimiting: isRateLimitingDisabled() ? 'disabled' : 'abuse-protection-only',
+      },
+    });
   }),
 );
 

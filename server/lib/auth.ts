@@ -160,18 +160,38 @@ interface Bucket {
 }
 const buckets = new Map<string, Bucket>();
 
+/**
+ * StudyMentor AI is free and unlimited: there is no plan gating, no credit
+ * system and no per-day feature cap anywhere in the app. The counters below
+ * exist only to blunt automated abuse (password guessing, scripted AI calls).
+ *
+ * Self-hosting for personal or classroom use? Set RATE_LIMIT_DISABLED=true and
+ * every feature becomes literally unlimited. RATE_LIMIT_MULTIPLIER (default 1)
+ * scales the built-in thresholds instead of switching them off.
+ */
+export function isRateLimitingDisabled(): boolean {
+  return String(process.env.RATE_LIMIT_DISABLED ?? '').toLowerCase() === 'true';
+}
+
+function limitMultiplier(): number {
+  const raw = Number(process.env.RATE_LIMIT_MULTIPLIER ?? '1');
+  return Number.isFinite(raw) && raw > 0 ? raw : 1;
+}
+
 export function rateLimit(
   key: string,
   limit: number,
   windowMs: number,
 ): { allowed: boolean; retryAfterSeconds: number } {
+  if (isRateLimitingDisabled()) return { allowed: true, retryAfterSeconds: 0 };
+  const effectiveLimit = Math.max(1, Math.ceil(limit * limitMultiplier()));
   const now = Date.now();
   const bucket = buckets.get(key);
   if (!bucket || bucket.resetAt < now) {
     buckets.set(key, { count: 1, resetAt: now + windowMs });
     return { allowed: true, retryAfterSeconds: 0 };
   }
-  if (bucket.count >= limit) {
+  if (bucket.count >= effectiveLimit) {
     return { allowed: false, retryAfterSeconds: Math.ceil((bucket.resetAt - now) / 1000) };
   }
   bucket.count += 1;

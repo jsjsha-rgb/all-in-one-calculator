@@ -32,6 +32,33 @@ A working full-stack application, not a static mockup:
 and API, SQLite schema, Supabase/Postgres migration with row-level security,
 environment template, and an automated test suite.
 
+### Free and unlimited access
+
+Every feature is available to every account, with no commercial limits anywhere
+in the product:
+
+- no subscription, licence key, trial timer or credit balance;
+- no locked lessons, question packs, current-affairs articles or Mains reviews;
+- no daily or monthly quota on AI mentor messages, Mains submissions, quizzes,
+  bookmarks, notes or saved history;
+- no "premium" flag in the schema, API or UI — there is nothing to unlock;
+- AI usage is limited only by the provider key *you* supply, not by this app.
+
+The only throttles are in-memory anti-abuse counters on sign-up, login, password
+reset, mentor messages and Mains evaluation, so a script cannot brute-force
+passwords or burn through an API key. They are configurable and can be switched
+off completely for personal or classroom self-hosting:
+
+```env
+RATE_LIMIT_DISABLED=true       # every counter off — literally unlimited
+# or keep them and widen the thresholds:
+RATE_LIMIT_MULTIPLIER=5
+```
+
+With no AI key the mentor and Mains evaluator run in the labelled demo mode,
+which is also unlimited. `GET /api/ai/status` reports
+`access: { free: true, unlimited: true }` alongside the AI mode.
+
 ---
 
 ## 2. Quick start
@@ -220,9 +247,11 @@ be used by changing `OPENAI_BASE_URL`.
   retry action. No assistant message or evaluation is saved.
 - Malformed Mains JSON → rejected by `validateEvaluation`; nothing is displayed
   as a real result.
-- Rate limits: mentor 20 requests / 10 min / user; Mains 8 / 10 min / user;
-  login 20 / 15 min; signup 10 / 15 min. Limits are in-memory per process — use
-  Redis or an edge limiter for multi-instance production.
+- Rate limits (anti-abuse only, never a usage quota): mentor 20 requests / 10 min
+  per user; Mains 8 / 10 min; login 20 / 15 min; signup 10 / 15 min. Set
+  `RATE_LIMIT_DISABLED=true` to remove them, or `RATE_LIMIT_MULTIPLIER` to widen
+  them. Counters are in-memory per process — use Redis or an edge limiter for
+  multi-instance production.
 
 ---
 
@@ -298,7 +327,8 @@ before opening a private deployment to real users.
   and add email verification).
 - Add an email provider for password reset; currently the reset token is returned
   only in non-production responses for testing.
-- Move rate limiting to shared storage.
+- Move the (optional, anti-abuse only) rate limiting to shared storage if you
+  run several API instances.
 - Add structured logs/monitoring and error reporting.
 - Review data retention and privacy copy with a qualified adviser.
 

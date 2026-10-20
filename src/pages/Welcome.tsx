@@ -101,7 +101,7 @@ export function WelcomePage() {
               <Badge tone="brand" icon={Target}>
                 Built for UPSC Civil Services
               </Badge>
-              <Badge tone="accent">Demo mode ready</Badge>
+              <Badge tone="accent">Free · unlimited access</Badge>
             </div>
             <h1 className="max-w-xl font-display text-[40px] leading-[1.08] tracking-[-0.02em] text-brand-900 sm:text-[54px]">
               Study with a plan.
@@ -126,7 +126,8 @@ export function WelcomePage() {
               </p>
             ) : null}
             <p className="mt-3 text-xs text-muted">
-              No card required · Seven GS subjects · Your data stays yours
+              No card, no plans, no daily caps · Every lesson, question, AI doubt and Mains
+              review is included
             </p>
             <dl className="mt-9 grid max-w-md grid-cols-3 gap-4 border-t border-line pt-6">
               {[

@@ -281,7 +281,7 @@ export function SignupPage() {
   return (
     <AuthLayout
       title="Create your study workspace"
-      subtitle="Two minutes to set up. No card, no clutter, and you can change everything later."
+      subtitle="Two minutes to set up. Free and unlimited — no card, no plans, no daily caps — and you can change everything later."
       footer={
         <p>
           Already have an account?{' '}
