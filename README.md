@@ -27,6 +27,7 @@ A working full-stack application, not a static mockup:
 | **Current affairs** | Search, subject filters, dated sample briefs, prelims facts, Mains relevance, related questions, bookmarks, clearly labelled demo provenance |
 | **Profile** | Goals editing, stats, weekly activity chart, weak topics, bookmarks, question history, Mains submissions, password change, logout |
 | **Responsive UI** | Desktop sidebar + optional summary rail, mobile header + bottom navigation (Home/Learn/Practice/AI/Profile), accessible labels, focus styles, empty/loading/error states |
+| **Local runners** | `npm run dev:all` (all platforms) and `run-windows.bat` (Windows double-click) start both servers, seed on first run and open the browser |
 
 **Deployment-ready pieces:** Vite production build, Express server serving the SPA
 and API, SQLite schema, Supabase/Postgres migration with row-level security,
@@ -63,26 +64,36 @@ which is also unlimited. `GET /api/ai/status` reports
 
 ## 2. Quick start
 
-Requirements: **Node.js 22.5+** (the local database uses the built-in
+Requirements: **Node.js 22.13+ or 24 LTS** (the local database uses the built-in
 `node:sqlite` module, so no native build tools are needed).
 
 ```bash
 npm install
-cp .env.example .env          # optional for demo mode
+cp .env.example .env          # optional, demo mode needs no keys
 npm run seed                  # sample content + demo learner
+npm run dev:all               # API :3001 + web :3000 in one terminal
 ```
 
-Run the API and the Vite dev server in two terminals:
+Open <http://localhost:3000>. `npm run dev:all` starts both servers, waits for
+the API, reuses one that is already running, and stops both on Ctrl+C. On Linux
+and macOS you can also run the two servers separately:
 
 ```bash
-# terminal 1 — API on :3001
-npm run start
-
-# terminal 2 — web app on :3000 (proxies /api to :3001)
-npm run dev
+npm run start                 # terminal 1 — API on :3001
+npm run dev                   # terminal 2 — web on :3000 (proxies /api)
 ```
 
-Open <http://localhost:3000>.
+### Windows
+
+Windows 10/11 users: double-click **`run-windows.bat`**. It checks Node, installs
+dependencies and seeds the database on first run, opens the browser, and starts
+both servers. The full walkthrough — SmartScreen prompts, firewall, changing
+ports, fixing `node:sqlite` errors — is in **[`WINDOWS.md`](WINDOWS.md)**.
+
+```bat
+run-windows.bat      :: easiest, double-click works too
+npm run dev:all      :: same thing from a terminal
+```
 
 ### Demo account
 
@@ -151,8 +162,11 @@ Sections 7 and 11 explain exactly what remains to connect Supabase.
 ├── supabase/
 │   ├── migrations/0001_init.sql # Postgres schema, triggers, indexes, RLS policies
 │   └── README.md                # Supabase setup and migration notes
+├── scripts/dev.mjs              # Cross-platform "run both servers" helper
 ├── tests/                       # Node test runner suites (see §10)
 ├── public/favicon.svg
+├── run-windows.bat              # Windows: install, seed and launch in one click
+├── WINDOWS.md                   # Windows setup and troubleshooting guide
 ├── .env.example
 └── README.md
 ```
@@ -183,9 +197,12 @@ Copy `.env.example` to `.env`. Only server-side variables are secret.
 | --- | --- | --- |
 | `NODE_ENV` | `development` or `production` (sets Secure cookies) | — |
 | `PORT` | API / production server port | `3001` |
+| `WEB_PORT` | Web dev port used by `npm run dev:all` | `3000` |
 | `DB_PATH` | SQLite file location | `./data/studaymentor.db` |
 | `SEED_ON_START` | Seed content at boot | on in dev, off in prod |
 | `SEED_DEMO_ACCOUNT` | Create the demo learner when seeding | `true` |
+| `RATE_LIMIT_DISABLED` | Turn the anti-abuse counters off entirely | `false` |
+| `RATE_LIMIT_MULTIPLIER` | Scale all anti-abuse thresholds | `1` |
 | `AI_PROVIDER` | `gemini`, `openai` or `demo` | auto-detect by key |
 | `AI_MODEL` | Model name | `gemini-2.5-flash` / `gpt-4o-mini` |
 | `AI_TIMEOUT_MS` | Provider request timeout | `30000` |
@@ -364,7 +381,7 @@ npm test        # Node test runner + tsx + jsdom for the navigation test
 npm run lint    # TypeScript project check
 ```
 
-Executed on 2026-10-20: **39 tests passed, 0 failed.**
+Executed on 2026-10-20: **43 tests passed, 0 failed.**
 
 Coverage:
 
@@ -386,6 +403,10 @@ Coverage:
 - **Responsive navigation:** `tests/navigation.test.tsx` — renders the authenticated
   shell in jsdom and asserts the desktop sidebar destinations, the five mobile
   bottom-nav destinations, the skip link, main landmark and active-link state.
+- **Free/unlimited access:** `tests/access.test.ts` — `/api/ai/status` advertises
+  `free`/`unlimited`, every lesson body and the full question bank are readable
+  with no lock, six consecutive mentor messages are accepted, and
+  `RATE_LIMIT_DISABLED=true` removes the anti-abuse counters.
 
 ### End-to-end journey checks actually executed
 
@@ -487,12 +508,14 @@ for local/demo use. Address these before handling real personal data at scale.
 | Command | Description |
 | --- | --- |
 | `npm run dev` | Vite dev server on `:3000`, `/api` proxied to `:3001` |
+| `npm run dev:all` | Starts the API **and** the web server together, on any OS |
 | `npm start` | Express API (`:3001`) and built SPA, seeds in development |
 | `npm run build` | Production client build into `dist/` |
 | `npm run seed` | Upsert sample content and demo learner |
 | `npm run seed:reset` | Recreate the demo learner's data from scratch |
 | `npm test` | Full automated test suite |
 | `npm run lint` | `tsc --noEmit` |
+| `run-windows.bat` | Windows one-click: checks Node, installs, seeds, starts both, opens browser |
 
 ---
 

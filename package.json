@@ -4,8 +4,11 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
+    "predev": "node scripts/preflight.mjs",
     "dev": "vite --port=3000 --host=0.0.0.0",
+    "dev:all": "node scripts/dev.mjs",
     "build": "vite build",
+    "prestart": "node scripts/preflight.mjs",
     "start": "tsx server/index.ts",
     "preview": "vite preview --host 0.0.0.0",
     "lint": "tsc --noEmit",
@@ -39,6 +42,6 @@
     "vite": "^6.2.0"
   },
   "engines": {
-    "node": ">=22.5"
+    "node": ">=22.13"
   }
 }
