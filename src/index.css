@@ -1,7 +1,152 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: "Fraunces", Georgia, "Times New Roman", serif;
+
+  --color-paper: #f6f5ef;
+  --color-surface: #ffffff;
+  --color-ink: #16211e;
+  --color-muted: #5c6a65;
+  --color-line: #e3e2d8;
+  --color-line-strong: #cfcec2;
+
+  --color-brand-50: #eef6f3;
+  --color-brand-100: #d9ece5;
+  --color-brand-200: #b4d9cc;
+  --color-brand-300: #82bfae;
+  --color-brand-400: #4c9f8a;
+  --color-brand-500: #1d826e;
+  --color-brand-600: #0f6a5a;
+  --color-brand-700: #0d5147;
+  --color-brand-800: #0b403a;
+  --color-brand-900: #092f2a;
+
+  --color-accent-50: #fbf3e7;
+  --color-accent-100: #f5e3c8;
+  --color-accent-300: #e6bd82;
+  --color-accent-500: #c98a3a;
+  --color-accent-600: #ab6f2a;
+  --color-accent-700: #83531f;
+
+  --color-danger-50: #fceceb;
+  --color-danger-100: #f6d3d0;
+  --color-danger-600: #b3261e;
+  --color-danger-700: #8f1d17;
+
+  --color-success-50: #eaf5ee;
+  --color-success-100: #cfe8d7;
+  --color-success-600: #1f7a4d;
+
+  --shadow-card: 0 1px 2px rgba(16, 33, 29, 0.04), 0 8px 24px -18px rgba(16, 33, 29, 0.25);
+  --shadow-raised: 0 2px 4px rgba(16, 33, 29, 0.05), 0 18px 40px -24px rgba(16, 33, 29, 0.35);
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-brand-600);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  ::selection {
+    background: var(--color-brand-100);
+    color: var(--color-brand-900);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@utility prose-study {
+  line-height: 1.75;
+  color: var(--color-ink);
+
+  & h2 {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    line-height: 1.4;
+    margin-top: 1.75rem;
+    margin-bottom: 0.6rem;
+    color: var(--color-brand-900);
+  }
+  & h3 {
+    font-family: var(--font-display);
+    font-size: 1.0625rem;
+    margin-top: 1.4rem;
+    margin-bottom: 0.4rem;
+    color: var(--color-brand-900);
+  }
+  & p {
+    margin-bottom: 0.85rem;
+  }
+  & ul, & ol {
+    margin: 0.5rem 0 1rem 1.15rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  & ul { list-style: disc; }
+  & ol { list-style: decimal; }
+  & strong { font-weight: 600; color: var(--color-brand-900); }
+  & blockquote {
+    border-left: 3px solid var(--color-accent-300);
+    background: var(--color-accent-50);
+    padding: 0.75rem 1rem;
+    border-radius: 0 0.75rem 0.75rem 0;
+    margin: 1rem 0;
+    font-size: 0.9rem;
+    color: #5a421f;
+  }
+  & code {
+    background: var(--color-brand-50);
+    padding: 0.1rem 0.35rem;
+    border-radius: 0.35rem;
+    font-size: 0.875em;
+  }
+  & a { color: var(--color-brand-700); text-decoration: underline; }
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-rise {
+  animation: rise 0.28s ease-out both;
+}
+
+@keyframes pulseDot {
+  0%, 80%, 100% { opacity: 0.25; transform: translateY(0); }
+  40% { opacity: 1; transform: translateY(-2px); }
+}
+
+.typing-dot {
+  animation: pulseDot 1.2s infinite ease-in-out;
 }

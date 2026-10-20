@@ -1,0 +1,19 @@
+{
+  "name": "StudyMentor AI — UPSC preparation",
+  "short_name": "StudyMentor",
+  "description": "AI-assisted UPSC preparation: lessons, practice, answer evaluation and current affairs.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#f6f5ef",
+  "theme_color": "#0d5147",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

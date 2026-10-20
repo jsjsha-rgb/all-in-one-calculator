@@ -1,5 +1,5 @@
 {
-  "name": "OmniCalc: All-in-One Calculator",
-  "description": "A comprehensive, professional-grade suite of calculators including scientific, financial, health, and unit conversion tools.",
+  "name": "StudyMentor AI",
+  "description": "An AI-assisted UPSC Civil Services preparation workspace with structured GS lessons, MCQ and PYQ-style practice, an AI doubt mentor, Mains answer evaluation, current-affairs briefs and progress tracking.",
   "requestFramePermissions": []
 }
